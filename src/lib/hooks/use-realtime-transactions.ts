@@ -45,7 +45,9 @@ export function useRealtimeTransactions({
           setTransactions((curr) => {
             switch (payload.eventType) {
               case "INSERT": {
-                const next = [payload.new as Transaction, ...curr];
+                const newTx = payload.new as Transaction;
+                if (curr.some((t) => t.id === newTx.id)) return curr;
+                const next = [newTx, ...curr];
                 return limit ? next.slice(0, limit) : next;
               }
               case "UPDATE":
