@@ -1,3 +1,5 @@
+import { ExportButton } from "@/components/transactions/export-button";
+import { ImportButton } from "@/components/transactions/import-button";
 import { NewTransactionButton } from "@/components/transactions/new-transaction-button";
 import { Pagination } from "@/components/transactions/pagination";
 import { TransactionsFilters } from "@/components/transactions/transactions-filters";
@@ -43,14 +45,18 @@ export default async function TransactionsPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Transações</h1>
           <p className="text-sm text-muted-foreground">
             Gerencie todas as suas movimentações
           </p>
         </div>
-        <NewTransactionButton categories={categories} />
+        <div className="flex flex-wrap gap-2">
+          <ImportButton categories={categories} />
+          <ExportButton categories={categories} />
+          <NewTransactionButton categories={categories} />
+        </div>
       </div>
 
       <TransactionsFilters categories={categories} />
