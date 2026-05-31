@@ -1,4 +1,4 @@
-import type { Transaction } from "@/types/domain";
+import type { BudgetProgress, Transaction } from "@/types/domain";
 
 import { ALL_GENERATORS, type GeneratorContext } from "./generators";
 import type { AppNotification } from "./types";
@@ -7,12 +7,14 @@ type ComputeInput = {
   today: Date;
   allTransactions: Transaction[];
   dismissedKeys: Set<string>;
+  budgetsProgress: BudgetProgress[];
 };
 
 export function computeNotifications({
   today,
   allTransactions,
   dismissedKeys,
+  budgetsProgress,
 }: ComputeInput): AppNotification[] {
   const monthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -79,6 +81,7 @@ export function computeNotifications({
     averageMonthlyExpense,
     totalExpenseThisMonth,
     totalIncomeThisMonth,
+    budgetsProgress,
   };
 
   return ALL_GENERATORS.map((gen) => gen(ctx))

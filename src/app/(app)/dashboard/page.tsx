@@ -1,10 +1,12 @@
 import { Suspense } from "react";
 
 import { BalanceChart } from "@/components/dashboard/balance-chart";
+import { BudgetSummaryCard } from "@/components/dashboard/budget-summary-card";
 import { DashboardSkeleton } from "@/components/dashboard/dashboard-skeleton";
 import { PeriodFilter } from "@/components/dashboard/period-filter";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { SummaryCards } from "@/components/dashboard/summary-cards";
+import { getBudgetsProgress } from "@/lib/data/budgets";
 import { getDashboardData } from "@/lib/data/dashboard";
 import { isValidPeriod } from "@/lib/utils/period";
 import type { DashboardPeriod } from "@/types/domain";
@@ -41,7 +43,10 @@ export default async function DashboardPage({
 }
 
 async function DashboardContent({ period }: { period: DashboardPeriod }) {
-  const data = await getDashboardData(period);
+  const [data, budgetProgress] = await Promise.all([
+    getDashboardData(period),
+    getBudgetsProgress(),
+  ]);
   if (!data) return null;
 
   return (
@@ -57,19 +62,27 @@ async function DashboardContent({ period }: { period: DashboardPeriod }) {
         locale={data.locale}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <BalanceChart
-          data={data.timeline}
-          currency={data.currency}
-          locale={data.locale}
-        />
-        <RecentTransactions
-          userId={data.userId}
-          initialData={data.recentTransactions}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <BalanceChart
+            data={data.timeline}
+            currency={data.currency}
+            locale={data.locale}
+          />
+        </div>
+        <BudgetSummaryCard
+          progress={budgetProgress}
           currency={data.currency}
           locale={data.locale}
         />
       </div>
+
+      <RecentTransactions
+        userId={data.userId}
+        initialData={data.recentTransactions}
+        currency={data.currency}
+        locale={data.locale}
+      />
     </>
   );
 }

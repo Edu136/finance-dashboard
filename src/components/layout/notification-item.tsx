@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import Link from "next/link";
 import {
+  AlertCircle,
   Calendar,
   Clock,
   PartyPopper,
@@ -17,6 +18,7 @@ import { cn } from "@/lib/utils/cn";
 import type { AppNotification } from "@/lib/notifications/types";
 
 const ICONS: Record<string, LucideIcon> = {
+  AlertCircle,
   Calendar,
   Clock,
   PartyPopper,

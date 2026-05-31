@@ -1,4 +1,4 @@
-import type { Transaction } from "@/types/domain";
+import type { BudgetProgress, Transaction } from "@/types/domain";
 
 import type { AppNotification } from "./types";
 
@@ -12,6 +12,7 @@ export type GeneratorContext = {
   averageMonthlyExpense: number; // média dos últimos 3 meses
   totalExpenseThisMonth: number;
   totalIncomeThisMonth: number;
+  budgetsProgress: BudgetProgress[];
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -151,4 +152,68 @@ export const ALL_GENERATORS = [
   highSpendingGenerator,
   noActivityGenerator,
   goodSavingsGenerator,
+  budgetExceededGenerator,
+  budgetWarningGenerator,
 ];
+
+// ─────────────────────────────────────────────────────────────
+// Generator 6: Meta excedida
+// ─────────────────────────────────────────────────────────────
+export function budgetExceededGenerator(
+  ctx: GeneratorContext
+): AppNotification | null {
+  const exceeded = ctx.budgetsProgress.filter(
+    (b) => b.status === "exceeded" && b.type === "expense"
+  );
+  if (exceeded.length === 0) return null;
+
+  const first = exceeded[0];
+  return {
+    key: `budget-exceeded:${ctx.monthKey}:${first.budget_id}`,
+    category: "high-spending",
+    severity: "alert",
+    title:
+      exceeded.length === 1
+        ? `Meta de ${first.category_name} excedida`
+        : `${exceeded.length} metas excedidas`,
+    message:
+      exceeded.length === 1
+        ? `Você passou do limite de ${first.category_name} este mês.`
+        : "Várias metas foram excedidas. Hora de revisar os gastos.",
+    icon: "AlertCircle",
+    href: "/budgets",
+    ctaLabel: "Ver metas",
+    createdAt: ctx.today.toISOString(),
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// Generator 7: Meta próxima do limite
+// ─────────────────────────────────────────────────────────────
+export function budgetWarningGenerator(
+  ctx: GeneratorContext
+): AppNotification | null {
+  const warning = ctx.budgetsProgress.filter(
+    (b) => b.status === "warning" && b.type === "expense"
+  );
+  if (warning.length === 0) return null;
+
+  const first = warning[0];
+  return {
+    key: `budget-warning:${ctx.monthKey}:${first.budget_id}`,
+    category: "high-spending",
+    severity: "warning",
+    title:
+      warning.length === 1
+        ? `${first.category_name} próximo do limite`
+        : `${warning.length} metas próximas do limite`,
+    message:
+      warning.length === 1
+        ? `Você atingiu ${first.pct.toFixed(0)}% da meta de ${first.category_name}.`
+        : "Algumas metas estão acima de 80% — fique atento.",
+    icon: "AlertCircle",
+    href: "/budgets",
+    ctaLabel: "Ver metas",
+    createdAt: ctx.today.toISOString(),
+  };
+}
