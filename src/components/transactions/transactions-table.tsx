@@ -45,30 +45,122 @@ export function TransactionsTable({
   const [editing, setEditing] = useState<Transaction | null>(null);
   const [deleting, setDeleting] = useState<Transaction | null>(null);
 
+  if (transactions.length === 0) {
+    return (
+      <div className="rounded-lg border bg-card p-12 text-center text-sm text-muted-foreground">
+        Nenhuma transação encontrada.
+      </div>
+    );
+  }
+
   return (
-    <div className="rounded-lg border bg-card">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="border-b bg-muted/40">
-            <tr>
-              <Th>Descrição</Th>
-              <Th>Tipo</Th>
-              <Th>Categoria</Th>
-              <Th>Data</Th>
-              <Th className="text-right">Valor</Th>
-              <Th>Status</Th>
-              <Th className="w-24 text-right">Ações</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions.length === 0 ? (
+    <>
+      {/* MOBILE: lista de cards (oculto em md+) */}
+      <ul className="space-y-2 md:hidden">
+        {transactions.map((t) => {
+          const cat = t.category_id ? categoriesById.get(t.category_id) : null;
+          const colorClass =
+            t.type === "income"
+              ? "text-success"
+              : t.type === "expense"
+              ? "text-destructive"
+              : "text-primary";
+          return (
+            <li
+              key={t.id}
+              className="flex items-start gap-3 rounded-lg border bg-card p-3"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="truncate text-sm font-medium">
+                    {t.description}
+                  </p>
+                  <span
+                    className={cn(
+                      "shrink-0 text-sm font-semibold tabular-nums",
+                      colorClass
+                    )}
+                  >
+                    {t.type === "income" ? "+" : "-"}
+                    {formatCurrency(t.amount, currency, locale)}
+                  </span>
+                </div>
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                  <span>{formatDate(t.date, locale)}</span>
+                  <span>·</span>
+                  <Badge
+                    variant={
+                      t.type === "income"
+                        ? "success"
+                        : t.type === "expense"
+                        ? "destructive"
+                        : "default"
+                    }
+                    className="text-[10px]"
+                  >
+                    {TYPE_LABEL[t.type]}
+                  </Badge>
+                  {cat && (
+                    <>
+                      <span>·</span>
+                      <span className="inline-flex items-center gap-1">
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ backgroundColor: cat.color }}
+                        />
+                        {cat.name}
+                      </span>
+                    </>
+                  )}
+                  {t.status === "pending" && (
+                    <Badge variant="warning" className="text-[10px]">
+                      Pendente
+                    </Badge>
+                  )}
+                </div>
+                <div className="mt-2 flex gap-1">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => setEditing(t)}
+                  >
+                    <Pencil className="h-3 w-3" />
+                    Editar
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-7 px-2 text-xs text-destructive hover:text-destructive"
+                    onClick={() => setDeleting(t)}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Excluir
+                  </Button>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+
+      {/* DESKTOP: tabela (oculto em mobile) */}
+      <div className="hidden rounded-lg border bg-card md:block">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="border-b bg-muted/40">
               <tr>
-                <td colSpan={7} className="py-12 text-center text-muted-foreground">
-                  Nenhuma transação encontrada.
-                </td>
+                <Th>Descrição</Th>
+                <Th>Tipo</Th>
+                <Th>Categoria</Th>
+                <Th>Data</Th>
+                <Th className="text-right">Valor</Th>
+                <Th>Status</Th>
+                <Th className="w-24 text-right">Ações</Th>
               </tr>
-            ) : (
-              transactions.map((t) => {
+            </thead>
+            <tbody>
+              {transactions.map((t) => {
                 const cat = t.category_id
                   ? categoriesById.get(t.category_id)
                   : null;
@@ -79,7 +171,10 @@ export function TransactionsTable({
                     ? "text-destructive"
                     : "text-primary";
                 return (
-                  <tr key={t.id} className="border-b last:border-0 hover:bg-muted/30">
+                  <tr
+                    key={t.id}
+                    className="border-b last:border-0 hover:bg-muted/30"
+                  >
                     <Td className="font-medium">{t.description}</Td>
                     <Td>
                       <Badge
@@ -108,14 +203,25 @@ export function TransactionsTable({
                       )}
                     </Td>
                     <Td>{formatDate(t.date, locale)}</Td>
-                    <Td className={cn("text-right font-semibold tabular-nums", colorClass)}>
+                    <Td
+                      className={cn(
+                        "text-right font-semibold tabular-nums",
+                        colorClass
+                      )}
+                    >
                       {t.type === "income" ? "+" : "-"}
                       {formatCurrency(t.amount, currency, locale)}
                     </Td>
                     <Td>
-                      {t.status === "pending" && <Badge variant="warning">Pendente</Badge>}
-                      {t.status === "confirmed" && <Badge variant="outline">Confirmada</Badge>}
-                      {t.status === "cancelled" && <Badge variant="outline">Cancelada</Badge>}
+                      {t.status === "pending" && (
+                        <Badge variant="warning">Pendente</Badge>
+                      )}
+                      {t.status === "confirmed" && (
+                        <Badge variant="outline">Confirmada</Badge>
+                      )}
+                      {t.status === "cancelled" && (
+                        <Badge variant="outline">Cancelada</Badge>
+                      )}
                     </Td>
                     <Td className="text-right">
                       <div className="flex justify-end gap-1">
@@ -140,10 +246,10 @@ export function TransactionsTable({
                     </Td>
                   </tr>
                 );
-              })
-            )}
-          </tbody>
-        </table>
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <TransactionModal
@@ -159,7 +265,7 @@ export function TransactionsTable({
         transactionId={deleting?.id ?? ""}
         description={deleting?.description ?? ""}
       />
-    </div>
+    </>
   );
 }
 

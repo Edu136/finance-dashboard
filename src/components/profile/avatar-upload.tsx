@@ -53,8 +53,8 @@ export function AvatarUpload({ currentUrl, fullName, email }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-      <div className="relative">
-        <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-secondary text-2xl font-medium">
+      <div className="relative shrink-0">
+        <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-2 border-border bg-secondary text-xl font-medium sm:h-24 sm:w-24 sm:text-2xl">
           {currentUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img

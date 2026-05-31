@@ -10,7 +10,7 @@ export async function Header() {
     : { data: null };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-end gap-2 border-b bg-background/80 px-6 backdrop-blur">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-end gap-2 border-b bg-background/80 px-4 pl-16 backdrop-blur md:pl-6">
       <ThemeToggle />
       {user && (
         <UserMenu

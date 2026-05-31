@@ -41,13 +41,13 @@ export function CategoryPieChart({ data, currency, locale }: Props) {
           Distribuição percentual no período selecionado
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0">
         {chartData.length === 0 ? (
-          <div className="flex h-[320px] items-center justify-center text-sm text-muted-foreground">
+          <div className="flex h-[280px] items-center justify-center text-sm text-muted-foreground">
             Sem gastos no período.
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height={320}>
+          <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
                 data={chartData}

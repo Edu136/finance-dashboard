@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, ArrowLeftRight, BarChart3, Wallet, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
 
@@ -16,13 +16,26 @@ export function Sidebar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  // Fecha drawer ao navegar
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Bloqueia scroll do body quando drawer aberto
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <>
-      {/* Botão mobile */}
+      {/* Botão hamburguer mobile */}
       <Button
         size="icon"
         variant="ghost"
-        className="fixed left-4 top-3 z-40 md:hidden"
+        className="fixed left-3 top-3 z-40 md:hidden"
         onClick={() => setOpen(true)}
         aria-label="Abrir menu"
       >
@@ -30,17 +43,18 @@ export function Sidebar() {
       </Button>
 
       {/* Overlay mobile */}
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      <div
+        onClick={() => setOpen(false)}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/50 transition-opacity md:hidden",
+          open ? "opacity-100" : "pointer-events-none opacity-0"
+        )}
+      />
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 border-r bg-card transition-transform",
-          "md:translate-x-0 md:static md:z-auto",
+          "fixed inset-y-0 left-0 z-50 w-64 border-r bg-card transition-transform duration-200",
+          "md:sticky md:top-0 md:h-screen md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -67,7 +81,6 @@ export function Sidebar() {
               <Link
                 key={href}
                 href={href}
-                onClick={() => setOpen(false)}
                 className={cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   active

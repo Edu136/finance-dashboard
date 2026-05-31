@@ -38,7 +38,7 @@ export function BalanceChart({ data, currency, locale }: Props) {
         <CardTitle>Evolução do Saldo</CardTitle>
         <CardDescription>Últimos 6 meses</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0 px-2 sm:px-6">
         {chartData.length === 0 ? (
           <div className="flex h-[280px] items-center justify-center text-sm text-muted-foreground">
             Sem dados para exibir.
@@ -47,7 +47,7 @@ export function BalanceChart({ data, currency, locale }: Props) {
           <ResponsiveContainer width="100%" height={280}>
             <AreaChart
               data={chartData}
-              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+              margin={{ top: 8, right: 8, left: -10, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="balanceGradient" x1="0" y1="0" x2="0" y2="1">

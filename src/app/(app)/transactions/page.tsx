@@ -47,12 +47,12 @@ export default async function TransactionsPage({
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Transações</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Transações</h1>
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Gerencie todas as suas movimentações
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <ImportButton categories={categories} />
           <ExportButton categories={categories} />
           <NewTransactionButton categories={categories} />

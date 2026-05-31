@@ -41,7 +41,7 @@ export function CashflowBarChart({ data, currency, locale }: Props) {
         <CardTitle>Fluxo de Caixa</CardTitle>
         <CardDescription>Receitas, gastos e investimentos por mês</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0 px-2 sm:px-6">
         {chartData.length === 0 ? (
           <div className="flex h-[320px] items-center justify-center text-sm text-muted-foreground">
             Sem dados no período.
@@ -50,7 +50,7 @@ export function CashflowBarChart({ data, currency, locale }: Props) {
           <ResponsiveContainer width="100%" height={320}>
             <BarChart
               data={chartData}
-              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+              margin={{ top: 8, right: 4, left: -10, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
               <XAxis
