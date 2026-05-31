@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useTransition } from "react";
+import Link from "next/link";
 import { LogOut, User as UserIcon } from "lucide-react";
 
 import { logoutAction } from "@/app/(auth)/actions";
@@ -69,10 +70,14 @@ export function UserMenu({ email, fullName, avatarUrl }: Props) {
             <p className="truncate text-xs text-muted-foreground">{email}</p>
           </div>
           <div className="p-1">
-            <button className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent">
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm hover:bg-accent"
+            >
               <UserIcon className="h-4 w-4" />
               Perfil
-            </button>
+            </Link>
             <button
               onClick={handleLogout}
               disabled={pending}
