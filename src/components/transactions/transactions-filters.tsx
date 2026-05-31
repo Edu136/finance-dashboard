@@ -41,7 +41,7 @@ export function TransactionsFilters({ categories }: Props) {
 
   return (
     <div className="rounded-lg border bg-card p-4">
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-1.5">
           <Label htmlFor="filter-type">Tipo</Label>
           <Select

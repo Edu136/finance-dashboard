@@ -48,4 +48,31 @@
   }
   * { @apply border-border; }
   body { @apply bg-background text-foreground antialiased; }
+
+  html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .scroll-shadow {
+    background:
+      linear-gradient(to right, hsl(var(--background)), hsl(var(--background))) left center,
+      linear-gradient(to right, transparent, hsl(var(--background))) left center,
+      linear-gradient(to left, hsl(var(--background)), hsl(var(--background))) right center,
+      linear-gradient(to left, transparent, hsl(var(--background))) right center;
+    background-repeat: no-repeat;
+    background-size: 24px 100%, 12px 100%, 24px 100%, 12px 100%;
+    background-attachment: local, scroll, local, scroll;
+  }
 }

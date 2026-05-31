@@ -31,7 +31,7 @@ export function SummaryCards({
   locale,
 }: Props) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <SummaryCard
         title="Saldo Total"
         subtitle="Acumulado de todas as transações"
@@ -95,7 +95,7 @@ function SummaryCard({ title, subtitle, value, icon, accent }: CardProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold tracking-tight">{value}</div>
+        <div className="truncate text-xl font-bold tracking-tight sm:text-2xl">{value}</div>
         <p className="mt-1 text-xs text-muted-foreground truncate">
           {subtitle}
         </p>

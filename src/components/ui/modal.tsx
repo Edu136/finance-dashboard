@@ -30,7 +30,7 @@ export function Modal({ open, onClose, title, description, children, className }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
       role="dialog"
       aria-modal="true"
@@ -38,8 +38,9 @@ export function Modal({ open, onClose, title, description, children, className }
       <div
         ref={ref}
         className={cn(
-          "relative w-full max-w-md rounded-lg border bg-card p-6 shadow-lg",
-          "animate-in fade-in-0 zoom-in-95 duration-200",
+          "relative max-h-[90vh] w-full overflow-y-auto rounded-t-lg border bg-card p-6 shadow-lg",
+          "sm:max-w-md sm:rounded-lg",
+          "animate-in fade-in-0 slide-in-from-bottom-4 sm:zoom-in-95 sm:slide-in-from-bottom-0 duration-200",
           className
         )}
       >

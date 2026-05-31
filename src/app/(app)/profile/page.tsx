@@ -21,9 +21,9 @@ export default async function ProfilePage() {
   const { profile, stats } = data;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto w-full max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Perfil</h1>
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">Perfil</h1>
         <p className="text-sm text-muted-foreground">
           Gerencie suas informações e preferências
         </p>

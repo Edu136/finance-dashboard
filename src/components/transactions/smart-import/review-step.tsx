@@ -145,8 +145,8 @@ export function ReviewStep({
       </div>
 
       {/* Tabela */}
-      <div className="max-h-[420px] overflow-y-auto rounded-md border">
-        <table className="w-full text-xs">
+      <div className="-mx-6 max-h-[420px] overflow-auto border-y sm:mx-0 sm:rounded-md sm:border">
+        <table className="w-full text-[11px] sm:text-xs">
           <thead className="sticky top-0 bg-muted/90 backdrop-blur">
             <tr>
               <th className="w-10 px-2 py-2"></th>

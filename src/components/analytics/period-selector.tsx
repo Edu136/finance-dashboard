@@ -21,7 +21,7 @@ export function PeriodSelector({ current }: { current: number }) {
   }
 
   return (
-    <div className="inline-flex rounded-md border bg-card p-1">
+    <div className="inline-flex w-full rounded-md border bg-card p-1 sm:w-auto">
       {OPTIONS.map((opt) => {
         const active = String(current) === opt.value;
         return (
@@ -29,7 +29,7 @@ export function PeriodSelector({ current }: { current: number }) {
             key={opt.value}
             href={buildHref(opt.value)}
             className={cn(
-              "rounded-sm px-3 py-1.5 text-sm font-medium transition-colors",
+              "flex-1 rounded-sm px-3 py-1.5 text-center text-sm font-medium transition-colors sm:flex-initial",
               active
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
