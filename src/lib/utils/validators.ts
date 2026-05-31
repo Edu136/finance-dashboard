@@ -66,3 +66,19 @@ export const passwordChangeSchema = z
 export type ProfileNameInput = z.infer<typeof profileNameSchema>;
 export type ProfilePreferencesInput = z.infer<typeof profilePreferencesSchema>;
 export type PasswordChangeInput = z.infer<typeof passwordChangeSchema>;
+
+export const recurringSchema = z.object({
+  type: z.enum(["income", "expense", "investment"]),
+  amount: z.number().positive("Valor deve ser maior que zero"),
+  description: z.string().min(1, "Descrição obrigatória").max(120),
+  day_of_month: z
+    .number()
+    .int()
+    .min(1, "Dia deve ser entre 1 e 31")
+    .max(31, "Dia deve ser entre 1 e 31"),
+  category_id: z.string().uuid().nullable().optional(),
+  notes: z.string().max(500).nullable().optional(),
+  active: z.boolean(),
+});
+
+export type RecurringInput = z.infer<typeof recurringSchema>;
