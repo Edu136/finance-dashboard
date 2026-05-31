@@ -1,7 +1,12 @@
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { MaterializeWatcher } from "@/components/layout/materialize-watcher";
+import { materializePendingRecurrings } from "@/lib/data/materialize-recurrings";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  // Materializa silenciosamente (não trava render)
+  await materializePendingRecurrings();
+
   return (
     <div className="flex min-h-screen">
       <Sidebar />
@@ -11,6 +16,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="mx-auto w-full max-w-7xl">{children}</div>
         </main>
       </div>
+      <MaterializeWatcher />
     </div>
   );
 }

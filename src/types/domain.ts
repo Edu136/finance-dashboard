@@ -89,6 +89,23 @@ export type CategoryExpense = {
   transaction_count: number;
 };
 
+export type RecurringTransaction = {
+  id: string;
+  user_id: string;
+  type: TransactionType;
+  amount: number;
+  description: string;
+  category_id: string | null;
+  notes: string | null;
+  day_of_month: number;
+  active: boolean;
+  next_due_date: string;
+  last_run_at: string | null;
+  total_runs: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type CashflowMonth = {
   month: string;
   income: number;
