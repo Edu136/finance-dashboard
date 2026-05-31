@@ -116,3 +116,37 @@ export type CashflowMonth = {
 };
 
 export type DashboardPeriod = "month" | "30d" | "year" | "all";
+
+export type Budget = {
+  id: string;
+  user_id: string;
+  category_id: string | null;
+  amount: number;
+  type: TransactionType;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type BudgetStatus = "safe" | "warning" | "exceeded";
+
+export type BudgetProgress = {
+  budget_id: string;
+  category_id: string | null;
+  category_name: string;
+  category_color: string;
+  category_icon: string;
+  type: TransactionType;
+  amount: number;
+  spent: number;
+  remaining: number;
+  pct: number;
+  status: BudgetStatus;
+};
+
+export type BudgetHistoryEntry = {
+  month: string;
+  total_budgets: number;
+  met_budgets: number;
+  exceeded: number;
+};

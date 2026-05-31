@@ -82,3 +82,12 @@ export const recurringSchema = z.object({
 });
 
 export type RecurringInput = z.infer<typeof recurringSchema>;
+
+export const budgetSchema = z.object({
+  category_id: z.string().uuid().nullable().optional(),
+  amount: z.number().positive("Valor deve ser maior que zero"),
+  type: z.enum(["income", "expense", "investment"]),
+  active: z.boolean(),
+});
+
+export type BudgetInput = z.infer<typeof budgetSchema>;
