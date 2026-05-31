@@ -144,9 +144,21 @@ export type BudgetProgress = {
   status: BudgetStatus;
 };
 
+export type BudgetHistoryItem = {
+  budget_id: string;
+  category_name: string;
+  category_color: string;
+  type: TransactionType;
+  amount: number;
+  spent: number;
+  pct: number;
+  status: BudgetStatus;
+};
+
 export type BudgetHistoryEntry = {
   month: string;
   total_budgets: number;
   met_budgets: number;
   exceeded: number;
+  items: BudgetHistoryItem[];
 };
