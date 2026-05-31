@@ -97,3 +97,5 @@ export type CashflowMonth = {
   net: number;
   cumulative_net: number;
 };
+
+export type DashboardPeriod = "month" | "30d" | "year" | "all";
