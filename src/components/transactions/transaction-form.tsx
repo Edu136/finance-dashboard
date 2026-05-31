@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
+import { useTransition } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -17,6 +17,7 @@ import {
   createTransaction,
   updateTransaction,
 } from "@/app/(app)/transactions/actions";
+import { notify } from "@/lib/utils/notify";
 import type { Category, Transaction } from "@/types/domain";
 
 type Props = {
@@ -34,7 +35,6 @@ export function TransactionForm({
   onCancel,
 }: Props) {
   const [pending, startTransition] = useTransition();
-  const [serverError, setServerError] = useState<string | null>(null);
   const isEdit = Boolean(transaction);
 
   const {
@@ -70,7 +70,6 @@ export function TransactionForm({
   const filteredCategories = categories.filter((c) => c.type === selectedType);
 
   const onSubmit = (values: TransactionInput) => {
-    setServerError(null);
     const payload = {
       ...values,
       category_id: values.category_id || null,
@@ -82,8 +81,12 @@ export function TransactionForm({
         ? await updateTransaction({ ...payload, id: transaction!.id })
         : await createTransaction(payload);
 
-      if ("error" in result) setServerError(result.error);
-      else onSuccess();
+      if ("error" in result) {
+        notify.error(result.error);
+      } else {
+        notify.success(isEdit ? "Transação atualizada!" : "Transação criada!");
+        onSuccess();
+      }
     });
   };
 
@@ -174,12 +177,6 @@ export function TransactionForm({
           {...register("notes")}
         />
       </div>
-
-      {serverError && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-          {serverError}
-        </div>
-      )}
 
       <div className="flex justify-end gap-2 pt-2">
         <Button

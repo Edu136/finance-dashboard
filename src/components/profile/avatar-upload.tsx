@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useRef, useTransition } from "react";
 import { Camera, Trash2, User as UserIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { removeAvatar, updateAvatar } from "@/app/(app)/profile/actions";
+import { notify } from "@/lib/utils/notify";
 
 type Props = {
   currentUrl: string | null;
@@ -14,7 +15,6 @@ type Props = {
 
 export function AvatarUpload({ currentUrl, fullName, email }: Props) {
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const initials = (fullName ?? email)
@@ -31,23 +31,23 @@ export function AvatarUpload({ currentUrl, fullName, email }: Props) {
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    setError(null);
 
     const fd = new FormData();
     fd.set("file", file);
 
     startTransition(async () => {
       const result = await updateAvatar(fd);
-      if ("error" in result) setError(result.error);
+      if ("error" in result) notify.error(result.error);
+      else notify.success("Foto atualizada!");
       if (fileInputRef.current) fileInputRef.current.value = "";
     });
   }
 
   function handleRemove() {
-    setError(null);
     startTransition(async () => {
       const result = await removeAvatar();
-      if ("error" in result) setError(result.error);
+      if ("error" in result) notify.error(result.error);
+      else notify.success("Foto removida!");
     });
   }
 
@@ -102,10 +102,6 @@ export function AvatarUpload({ currentUrl, fullName, email }: Props) {
             </Button>
           )}
         </div>
-
-        {error && (
-          <p className="text-xs text-destructive">{error}</p>
-        )}
 
         <input
           ref={fileInputRef}
