@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,12 +12,9 @@ import {
   type RegisterInput,
 } from "@/lib/utils/validators";
 import { registerAction } from "@/app/(auth)/actions";
+import { notify } from "@/lib/utils/notify";
 
 export function RegisterForm() {
-  const [serverMsg, setServerMsg] = useState<{
-    type: "error" | "info";
-    text: string;
-  } | null>(null);
   const [pending, startTransition] = useTransition();
 
   const {
@@ -35,16 +32,15 @@ export function RegisterForm() {
   });
 
   const onSubmit = (values: RegisterInput) => {
-    setServerMsg(null);
     const fd = new FormData();
     Object.entries(values).forEach(([k, v]) => fd.set(k, v));
 
     startTransition(async () => {
       const result = await registerAction(fd);
       if (result && "error" in result) {
-        // Mensagem de "verifique seu email" também vem por aqui
         const isInfo = result.error.toLowerCase().includes("verifique");
-        setServerMsg({ type: isInfo ? "info" : "error", text: result.error });
+        if (isInfo) notify.info(result.error);
+        else notify.error(result.error);
       }
     });
   };
@@ -97,18 +93,6 @@ export function RegisterForm() {
           {...register("confirmPassword")}
         />
       </div>
-
-      {serverMsg && (
-        <div
-          className={
-            serverMsg.type === "error"
-              ? "rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
-              : "rounded-md border border-primary/30 bg-primary/10 p-3 text-sm text-primary"
-          }
-        >
-          {serverMsg.text}
-        </div>
-      )}
 
       <Button type="submit" className="w-full" loading={pending}>
         Criar conta

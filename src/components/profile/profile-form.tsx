@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,16 +12,13 @@ import {
   profileNameSchema,
   type ProfileNameInput,
 } from "@/lib/utils/validators";
+import { notify } from "@/lib/utils/notify";
 import type { Profile } from "@/types/domain";
 
 type Props = { profile: Profile };
 
 export function ProfileForm({ profile }: Props) {
   const [pending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   const {
     register,
@@ -36,13 +33,12 @@ export function ProfileForm({ profile }: Props) {
   });
 
   const onSubmit = (values: ProfileNameInput) => {
-    setFeedback(null);
     startTransition(async () => {
       const result = await updateProfileName(values);
       if ("error" in result) {
-        setFeedback({ type: "error", text: result.error });
+        notify.error(result.error);
       } else {
-        setFeedback({ type: "success", text: "Perfil atualizado!" });
+        notify.success("Perfil atualizado!");
         reset(values);
       }
     });
@@ -59,18 +55,6 @@ export function ProfileForm({ profile }: Props) {
           {...register("full_name")}
         />
       </div>
-
-      {feedback && (
-        <div
-          className={
-            feedback.type === "error"
-              ? "rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
-              : "rounded-md border border-success/30 bg-success/10 p-3 text-sm text-success"
-          }
-        >
-          {feedback.text}
-        </div>
-      )}
 
       <div className="flex justify-end">
         <Button type="submit" loading={pending} disabled={!isDirty}>

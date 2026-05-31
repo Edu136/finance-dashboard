@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,13 +12,10 @@ import {
   passwordChangeSchema,
   type PasswordChangeInput,
 } from "@/lib/utils/validators";
+import { notify } from "@/lib/utils/notify";
 
 export function PasswordForm() {
   const [pending, startTransition] = useTransition();
-  const [feedback, setFeedback] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   const {
     register,
@@ -31,13 +28,12 @@ export function PasswordForm() {
   });
 
   const onSubmit = (values: PasswordChangeInput) => {
-    setFeedback(null);
     startTransition(async () => {
       const result = await changePassword(values);
       if ("error" in result) {
-        setFeedback({ type: "error", text: result.error });
+        notify.error(result.error);
       } else {
-        setFeedback({ type: "success", text: "Senha alterada com sucesso!" });
+        notify.success("Senha alterada com sucesso!");
         reset();
       }
     });
@@ -70,18 +66,6 @@ export function PasswordForm() {
           />
         </div>
       </div>
-
-      {feedback && (
-        <div
-          className={
-            feedback.type === "error"
-              ? "rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
-              : "rounded-md border border-success/30 bg-success/10 p-3 text-sm text-success"
-          }
-        >
-          {feedback.text}
-        </div>
-      )}
 
       <div className="flex justify-end">
         <Button type="submit" loading={pending}>

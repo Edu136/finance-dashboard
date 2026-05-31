@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -10,9 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { loginSchema, type LoginInput } from "@/lib/utils/validators";
 import { loginAction } from "@/app/(auth)/actions";
+import { notify } from "@/lib/utils/notify";
 
 export function LoginForm() {
-  const [serverError, setServerError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   const {
@@ -25,14 +25,13 @@ export function LoginForm() {
   });
 
   const onSubmit = (values: LoginInput) => {
-    setServerError(null);
     const fd = new FormData();
     fd.set("email", values.email);
     fd.set("password", values.password);
 
     startTransition(async () => {
       const result = await loginAction(fd);
-      if (result && "error" in result) setServerError(result.error);
+      if (result && "error" in result) notify.error(result.error);
     });
   };
 
@@ -69,12 +68,6 @@ export function LoginForm() {
           {...register("password")}
         />
       </div>
-
-      {serverError && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-          {serverError}
-        </div>
-      )}
 
       <Button type="submit" className="w-full" loading={pending}>
         Entrar
