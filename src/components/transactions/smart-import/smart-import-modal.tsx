@@ -179,7 +179,7 @@ export function SmartImportModal({ open, onClose, categories }: Props) {
           ? "Envie o extrato do seu banco"
           : "Revise as transações antes de importar"
       }
-      className="w-full max-w-3xl"
+      className="w-full sm:max-w-5xl sm:max-h-[95vh]"
     >
       {step === "upload" ? (
         <UploadStep onFileReady={handleFileReady} pending={analyzing} />
