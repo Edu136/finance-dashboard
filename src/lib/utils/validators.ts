@@ -91,3 +91,33 @@ export const budgetSchema = z.object({
 });
 
 export type BudgetInput = z.infer<typeof budgetSchema>;
+
+const baseInvestmentSchema = z.object({
+  name: z.string().min(1).max(80),
+  purchase_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  notes: z.string().max(500).nullable().optional(),
+});
+
+export const stockInvestmentSchema = baseInvestmentSchema.extend({
+  type: z.literal("stock"),
+  ticker: z
+    .string()
+    .min(2)
+    .max(10)
+    .transform((s) => s.toUpperCase().trim()),
+  quantity: z.number().positive(),
+  purchase_price: z.number().positive(),
+});
+
+export const fixedIncomeInvestmentSchema = baseInvestmentSchema.extend({
+  type: z.literal("fixed_income"),
+  applied_amount: z.number().positive(),
+  cdi_percentage: z.number().positive().max(500),
+});
+
+export const investmentSchema = z.discriminatedUnion("type", [
+  stockInvestmentSchema,
+  fixedIncomeInvestmentSchema,
+]);
+
+export type InvestmentInput = z.infer<typeof investmentSchema>;

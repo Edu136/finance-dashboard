@@ -55,9 +55,9 @@ async function DashboardContent({ period }: { period: DashboardPeriod }) {
         totalBalance={data.totalBalance}
         income={data.periodSummary.income}
         expense={data.periodSummary.expense}
-        investment={data.periodSummary.investment}
         count={data.periodSummary.count}
         periodLabel={data.periodLabel}
+        investments={data.investments}
         currency={data.currency}
         locale={data.locale}
       />

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ArrowLeftRight, BarChart3, Wallet, Menu, X, Repeat, Target } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, BarChart3, Wallet, Menu, X, Repeat, Target, LineChart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ const links = [
   { href: "/transactions", label: "Transações",  icon: ArrowLeftRight },
   { href: "/recurring",    label: "Recorrências",icon: Repeat },
   { href: "/budgets",      label: "Metas",       icon: Target },
+  { href: "/investments",  label: "Investimentos",icon: LineChart },
   { href: "/analytics",    label: "Analytics",   icon: BarChart3 },
 ];
 

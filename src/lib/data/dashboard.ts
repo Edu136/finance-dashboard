@@ -6,6 +6,13 @@ import type {
   Transaction,
 } from "@/types/domain";
 
+export type InvestmentsSummaryForDashboard = {
+  total_invested: number;
+  current_value: number;
+  profit: number;
+  profit_pct: number;
+};
+
 export type DashboardData = {
   userId: string;
   period: DashboardPeriod;
@@ -18,6 +25,7 @@ export type DashboardData = {
     net: number;
     count: number;
   };
+  investments: InvestmentsSummaryForDashboard;
   timeline: BalanceTimelinePoint[];
   recentTransactions: Transaction[];
   currency: string;
@@ -45,6 +53,7 @@ export async function getDashboardData(
     summaryRes,
     timelineRes,
     recentRes,
+    investmentsRes,
   ] = await Promise.all([
     supabase
       .from("profiles")
@@ -68,6 +77,7 @@ export async function getDashboardData(
       .order("date", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(5),
+    supabase.rpc("get_investments_summary", { p_user_id: user.id }),
   ]);
 
   const summary = summaryRes.data?.[0] ?? {
@@ -76,6 +86,13 @@ export async function getDashboardData(
     total_investment: 0,
     net_balance: 0,
     transaction_count: 0,
+  };
+
+  const investmentsSummary = investmentsRes.data?.[0] ?? {
+    total_invested: 0,
+    current_value: 0,
+    profit: 0,
+    profit_pct: 0,
   };
 
   return {
@@ -89,6 +106,12 @@ export async function getDashboardData(
       investment: Number(summary.total_investment),
       net: Number(summary.net_balance),
       count: Number(summary.transaction_count),
+    },
+    investments: {
+      total_invested: Number(investmentsSummary.total_invested),
+      current_value: Number(investmentsSummary.current_value),
+      profit: Number(investmentsSummary.profit),
+      profit_pct: Number(investmentsSummary.profit_pct),
     },
     timeline: (timelineRes.data ?? []) as BalanceTimelinePoint[],
     recentTransactions: (recentRes.data ?? []) as Transaction[],

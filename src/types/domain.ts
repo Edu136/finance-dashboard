@@ -162,3 +162,37 @@ export type BudgetHistoryEntry = {
   exceeded: number;
   items: BudgetHistoryItem[];
 };
+
+export type InvestmentType = "stock" | "fixed_income";
+
+export type Investment = {
+  id: string;
+  user_id: string;
+  type: InvestmentType;
+  name: string;
+  purchase_date: string;
+  notes: string | null;
+  ticker: string | null;
+  quantity: number | null;
+  purchase_price: number | null;
+  applied_amount: number | null;
+  cdi_percentage: number | null;
+  transaction_id: string | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
+export type InvestmentWithCurrent = Investment & {
+  current_value: number;
+  current_unit_price: number | null;
+  profit: number;
+  profit_pct: number;
+};
+
+export type InvestmentsSummary = {
+  total_invested: number;
+  current_value: number;
+  profit: number;
+  profit_pct: number;
+};
