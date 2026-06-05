@@ -84,7 +84,7 @@ export function StockForm({ investment, onSuccess, onCancel }: Props) {
     startLookup(async () => {
       const result = await lookupTicker(ticker);
       if ("error" in result) {
-        setLookupError(result.error);
+        setLookupError(result.error || "Erro ao buscar ticker");
         setMarketPrice(null);
         setShortName(null);
       } else if (result.success) {

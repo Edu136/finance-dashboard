@@ -52,6 +52,7 @@ export async function createInvestment(input: unknown): Promise<ActionResult> {
 
   const { data, error } = await supabase
     .from("investments")
+    // @ts-expect-error - Union type inference limitation with Supabase
     .insert(payload)
     .select("id")
     .single();
